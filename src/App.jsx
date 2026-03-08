@@ -12,6 +12,11 @@ import Whyuspage from "./pages/Whyuspage";
 import Helppage from "./pages/Helppage";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
+import VAT from "./calculators/VAT";
+import Business from "./calculators/Business";
+import Guide from "./calculators/Guide"
+import PAYE from "./calculators/PAYE";
+import CalculatorIntro from "./calculators/CalculatorIntro";
 
 function App() {
   return (
@@ -23,7 +28,13 @@ function App() {
         <Route path="/about" element={<Aboutpage />} />
         <Route path="/faq" element={<FAQpage />} />
         <Route path="/blog" element={<Blogpage />} />
-        <Route path="/calculator" element={<Calculatorpage />} />
+        <Route path="/calculator" element={<Calculatorpage />}>
+          <Route index element={<CalculatorIntro />} />
+          <Route path="vat" element={<VAT />} />
+          <Route path="paye" element={<PAYE />} />
+          <Route path="business" element={<Business />} />
+          <Route path="guide" element={<Guide />} />
+        </Route> 
         <Route path="/signin" element={<Signinpage />} />
         <Route path="/signup" element={<Signuppage />} />
         <Route path="/why-us" element={<Whyuspage />} />

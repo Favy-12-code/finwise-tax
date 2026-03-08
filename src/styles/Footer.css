@@ -7,7 +7,7 @@ bottom: 0;
 .footer-main{
 background:white;
 color:#062133;
-padding: 75px 7vw 25px;
+padding: 75px 7vw 25px 7vw;
 box-sizing:border-box;
 font-family: Poppins, sans-serif;
 }
@@ -96,10 +96,6 @@ gap:40px;
 }
 
 }
-
-/* ======================= */
-/* TABLET */
-/* ======================= */
 
 @media (max-width:900px){
 

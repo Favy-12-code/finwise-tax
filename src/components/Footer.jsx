@@ -28,9 +28,9 @@ export default function Footer() {
 
           <div className="footer-col">
             <h3>Tax Guides</h3>
-            <Link to="/calculator/guides/2026">Nigeria Tax Guide 2026</Link>
-            <Link to="/calculator/guides/paye">PAYE Guide Nigeria</Link>
-            <Link to="/calculator/guides/vat">VAT Guide Nigeria</Link>
+            <Link to="/calculator/guide/2026">Nigeria Tax Guide 2026</Link>
+            <Link to="/calculator/guide/paye">PAYE Guide Nigeria</Link>
+            <Link to="/calculator/guide/vat">VAT Guide Nigeria</Link>
           </div>
 
           <div className="footer-col calculator-col">

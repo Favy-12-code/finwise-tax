@@ -82,10 +82,9 @@ const FAQsection = () => {
             <div className="faq-card" key={index}>
               <div
                 className="faq-question"
-                onClick={() => toggleItem(index)}
               >
                 <h3>{faq.question}</h3>
-                <span>{openItems.includes(index) ? "−" : "+"}</span>
+                <span onClick={() => toggleItem(index)}>{openItems.includes(index) ? "−" : "+"}</span>
               </div>
 
               {openItems.includes(index) && (

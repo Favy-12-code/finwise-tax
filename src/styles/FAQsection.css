@@ -86,9 +86,12 @@
     width:100%;
   }
 
-  .faq-col.right{
-    margin-top:0;
+  .faq-card .faq-question:nth-child(5) {
+    margin-bottom: 100px;
   }
+  .faq-col.right{
+  margin-top:1vh;
+}
 }
 
 @media (max-width: 360px) {

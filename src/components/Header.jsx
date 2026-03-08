@@ -79,7 +79,7 @@ export default function Header() {
         <NavLink to="/about" onClick={() => setMenuOpen(false)}>About</NavLink>
         <NavLink to="/faq" onClick={() => setMenuOpen(false)}>Faqs</NavLink>
         <NavLink to="/blog" onClick={() => setMenuOpen(false)}>Blog</NavLink>
-        <NavLink to="/tax" onClick={() => setMenuOpen(false)}>Calculator</NavLink>
+        <NavLink to="/calculator" onClick={() => setMenuOpen(false)}>Calculator</NavLink>
         <NavLink to="/signin" onClick={() => setMenuOpen(false)}>Sign In</NavLink>
         <NavLink to="/signup" className="signup" onClick={() => setMenuOpen(false)}>Sign Up</NavLink>
       </div>

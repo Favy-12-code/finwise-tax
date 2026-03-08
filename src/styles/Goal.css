@@ -1,6 +1,6 @@
 .info-section {
   width: 100vw;
-  height: 65vh; 
+  min-height: 65vh; 
   display: flex;
   justify-content: center;
   gap: 8vh;
@@ -72,7 +72,6 @@
   }
 }
 
-/* Extra small screens: smaller icons and text */
 @media (max-width: 400px) {
   .info-section {
     width: 100% ;
