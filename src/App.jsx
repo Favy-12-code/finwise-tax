@@ -17,10 +17,12 @@ import Business from "./calculators/Business";
 import Guide from "./calculators/Guide"
 import PAYE from "./calculators/PAYE";
 import CalculatorIntro from "./calculators/CalculatorIntro";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Header />
 
       <Routes>

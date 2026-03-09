@@ -85,13 +85,10 @@
   .faq-col{
     width:100%;
   }
-
-  .faq-card .faq-question:nth-child(5) {
-    margin-bottom: 100px;
+  
+  .faq-columns{
+    gap: 3.3vh;
   }
-  .faq-col.right{
-  margin-top:1vh;
-}
 }
 
 @media (max-width: 360px) {

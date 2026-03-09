@@ -178,3 +178,239 @@
     font-size: 10px;
   }
 }
+
+.vat-container{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap: 54px;
+  margin-top:40px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.vat-form,
+.vat-result{
+  background:white;
+  border-radius:16px;
+  padding:30px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.05);
+  border:1px solid #f1f1f1;
+}
+
+
+.vat-header{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  margin-bottom:20px;
+}
+
+.vat-first{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  margin-bottom:17px;
+}
+
+.vat-first svg{
+  margin-top: 10px;
+  width:20px;
+  height:20px;
+}
+
+.vat-first h2{
+  font-size:20px;
+  font-weight:600;
+  color:#0B3C5D;
+  margin:0;
+}
+
+.vat-header p{
+  font-size:14px;
+  color:#20242A;
+  margin:0;
+}
+
+.vat-mode{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+  margin-bottom:15px;
+}
+
+.vat-mode button{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  background: transparent;
+  border: 1px solid #5C7C92;
+  color: #0B3C5D;
+  cursor:pointer;
+  font-size:14px;
+  text-align:left;
+  transition:0.2s;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.vat-mode button:hover{
+  background:#f0f4f7;
+}
+
+.vat-mode button.active{
+  background:#0B3C5D;
+  color:white;
+  border:none;
+}
+button:focus{
+  outline: none;
+}
+
+button:active{
+  outline: none;
+}
+
+.vat-form p{
+  text-align:left;
+  font-size:14px;
+  margin-bottom:10px;
+}
+
+
+.vat-form input{
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:1px solid #3C637D;
+  font-size:15px;
+  margin-bottom:10px;
+}
+
+.vat-form input:focus{
+  outline:none;
+  border-color:#082B42;
+}
+
+.error{
+  color:red;
+  font-size:13px;
+  margin-bottom:10px;
+}
+
+
+.vat-buttons{
+  display:flex;
+  gap:22px;
+  margin-top:10px;
+}
+
+.vat-buttons button{
+  flex:1;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  font-size:14px;
+  transition:0.2s;
+  font-weight: 400;
+}
+
+.vat-buttons button:first-child{
+  background:#0B3C5D;
+  color:white;
+  padding:12px;
+  flex:2;
+}
+
+.vat-buttons button:first-child:hover{
+  background:#061e2f;
+}
+
+.vat-buttons button:last-child{
+  background: transparent;
+  border: 1px solid #5C7C92;
+  color: #0B3C5D;
+  flex:1;
+}
+
+.vat-buttons button:last-child:hover{
+  background:#e6e6e6;
+}
+
+
+.vat-result h3{
+  font-size:20px;
+  margin-bottom:18px;
+  text-align: left;
+  color: #0B3C5D;
+}
+
+.vat-result p{
+  font-size:15px;
+  margin-bottom:8px;
+  text-align: left;
+  color: #20242A;
+  font-weight: 400;
+}
+
+.strng {
+  font-weight: 500;
+}
+
+
+.vat-result .empty {
+  margin-top: 100px;
+  font-size: 10px;
+  text-align:center;
+}
+
+.vat-explanation{
+  margin-top:20px;
+  padding:18px;
+  background:#f8fafc;
+  border-radius:10px;
+  border-left:4px solid #082B42;
+  text-align: left;
+}
+
+.vat-explanation h4{
+  margin-bottom:8px;
+  font-size:16px;
+  color:#0B3C5D;
+}
+
+.vat-explanation p{
+  font-size:14px;
+  line-height:1.6;
+  color: #20242A;
+}
+
+
+@media (max-width:900px){
+
+  .vat-container{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media (max-width:600px){
+
+  .vat-form,
+  .vat-result{
+    padding:22px;
+  }
+
+  .vat-first h2{
+    font-size:18px;
+  }
+
+  .vat-mode button{
+    font-size:13px;
+    padding:8px;
+  }
+
+  .vat-buttons button{
+    font-size:13px;
+    padding:10px;
+  }
+
+}
