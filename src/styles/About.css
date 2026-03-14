@@ -9,7 +9,9 @@ body {
   justify-content: center;
   background-color: #FFFFFF;
   height: 80vh;
+  scroll-margin-top: 100px;
 }
+
 .abt {
   font-size: 20px;
   font-weight: bold;
@@ -134,6 +136,11 @@ body {
   font-size: 30px;
   font-weight: bold;
   color: #082B42;
+}
+
+.The-problem p{
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .sol {

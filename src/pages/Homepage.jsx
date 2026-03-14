@@ -7,10 +7,10 @@ import FAQsection from '../components/FAQsection'
 const Homepage = () => {
   return (
     <div>
-      <HeroSection />
-      <AboutSection />
-      <GoalSection />
-      <FAQsection />
+      <HeroSection id="Hero-section" />
+      <AboutSection id="About-section" />
+      <GoalSection id="Goal-section" />
+      <FAQsection id="FAQ-section" />
     </div>
   )
 }

@@ -69,11 +69,11 @@ const FAQsection = () => {
   const leftColumn = faqData.filter((_, i) => i % 2 === 0);
   const rightColumn = faqData.filter((_, i) => i % 2 === 1);
   return (
-    <section className="faq-section">
+    <section id='faq' className="faq-section">
 
-      <Link to="/faq" className="faq-title">
+      <h2 className="faq-title">
         Frequently Asked Questions
-      </Link>
+      </h2>
 
       <div className="faq-columns">
 

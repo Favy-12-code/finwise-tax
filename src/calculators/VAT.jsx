@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import '../styles/calculator.css'
+import { useLocation } from 'react-router-dom';
 
 const VAT = () => {
 
@@ -10,6 +11,10 @@ const VAT = () => {
   const [error, setError] = useState("");
 
   const VAT_RATE = 0.075;
+
+  const location = useLocation();
+
+  /* LOAD SAVED DATA */
 
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("vatData"));
@@ -22,29 +27,51 @@ const VAT = () => {
     }
   }, []);
 
+  /* FORMAT NUMBER WITH COMMAS */
+
+  const formatNumber = (value) => {
+    const num = value.replace(/,/g, "");
+    if (!num) return "";
+    return Number(num).toLocaleString();
+  };
+
+  /* HANDLE INPUT WITH COMMAS */
+
+  const handleInput = (value,setter) => {
+
+    const raw = value.replace(/,/g,"");
+
+    if(!/^\d*$/.test(raw)) return;
+
+    setter(formatNumber(raw));
+
+  };
+
+  /* CALCULATE VAT */
+
   const calculateVAT = () => {
 
-    if (!amount || amount <= 0) {
+    const numericAmount = Number(amount.replace(/,/g,""));
+
+    if (!numericAmount || numericAmount <= 0) {
       setError("Please enter a valid amount.");
       return;
     }
 
     setError("");
 
-    const value = parseFloat(amount);
-
     let vatAmount;
     let originalAmount;
 
     if (mode === "add") {
 
-      vatAmount = value * VAT_RATE;
-      originalAmount = value;
+      vatAmount = numericAmount * VAT_RATE;
+      originalAmount = numericAmount;
 
     } else {
 
-      originalAmount = value / (1 + VAT_RATE);
-      vatAmount = value - originalAmount;
+      originalAmount = numericAmount / (1 + VAT_RATE);
+      vatAmount = numericAmount - originalAmount;
 
     }
 
@@ -54,7 +81,7 @@ const VAT = () => {
     localStorage.setItem(
       "vatData",
       JSON.stringify({
-        amount: value,
+        amount: amount,
         vat: vatAmount,
         original: originalAmount,
         mode: mode
@@ -62,33 +89,80 @@ const VAT = () => {
     );
   };
 
+  /* RESET */
+
   const resetForm = () => {
+
     setAmount("");
     setVat(null);
     setOriginal(null);
     setError("");
+
     localStorage.removeItem("vatData");
+
   };
 
+
+  /* SCROLL TO SECTION */
+
+  useEffect(() => {
+
+    if (location.hash) {
+
+      const el = document.querySelector(location.hash);
+
+      if (el) {
+
+        const offset = 80;
+
+        const top =
+          el.getBoundingClientRect().top + window.pageYOffset - offset;
+
+        window.scrollTo({
+          top,
+          behavior: "smooth",
+        });
+
+      }
+    }
+
+  }, [location]);
+
+
   return (
-    <div className="vat-container">
+
+    <div className="vat-container" id="vatSection">
+
+      {/* FORM */}
 
       <div className="vat-form">
 
         <div className="vat-header">
+
           <div className="vat-first">
+
             <span>
+
               <svg width='30' height="30" viewBox='0 0 40 40'> 
                 <rect x="2" y="2" width='28' height="28" rx="2" stroke='#082B42' strokeWidth='1' fill='none' />
                 <text x='40%' y='65%' textAnchor='middle' fontSize='29' fill='#082B42'>₦</text>
               </svg>
+
             </span>
+
             <h2>VAT Calculator</h2>
+
           </div>
+
           <p>Nigeria VAT rate: 7.5%</p>
+
         </div>
 
+
+        {/* MODE BUTTONS */}
+
         <div className="vat-mode">
+
           <button
             className={mode === "add" ? "active" : ""}
             onClick={() => setMode("add")}
@@ -102,7 +176,9 @@ const VAT = () => {
           >
             Remove VAT
           </button>
+
         </div>
+
 
         <p>
           {mode === "add"
@@ -110,22 +186,36 @@ const VAT = () => {
             : "Remove VAT from the total amount ₦"}
         </p>
 
+
+        {/* INPUT */}
+
         <input
-          type="number"
+          type="text"
           placeholder="Enter amount (₦)"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e)=>handleInput(e.target.value,setAmount)}
         />
+
 
         {error && <p className="error">{error}</p>}
 
+
         <div className="vat-buttons">
-          <button onClick={calculateVAT}>Calculate VAT</button>
-          <button onClick={resetForm}>Reset</button>
+
+          <button onClick={calculateVAT}>
+            Calculate VAT
+          </button>
+
+          <button onClick={resetForm}>
+            Reset
+          </button>
+
         </div>
 
       </div>
 
+
+      {/* RESULT */}
 
       <div className="vat-result">
 
@@ -150,10 +240,12 @@ const VAT = () => {
             </p>
 
             {mode === "remove" && (
+
               <p>
                 <strong className="strng">VAT Inclusive Amount: </strong>
-                ₦{Number(amount).toLocaleString()}
+                ₦{Number(amount.replace(/,/g,"")).toLocaleString()}
               </p>
+
             )}
 
             <div className="vat-explanation">
@@ -161,11 +253,12 @@ const VAT = () => {
               <h4>Explanation</h4>
 
               <p>
-                Nigeria applies a standard <strong>7.5% Value Added Tax (VAT) </strong>
+                Nigeria applies a standard <strong>7.5% Value Added Tax (VAT)</strong>
                 on most goods and services.
               </p>
 
               {mode === "add" ? (
+
                 <p>
                   If a business sells goods worth
                   <strong> ₦{original.toLocaleString()}</strong>,
@@ -174,13 +267,16 @@ const VAT = () => {
                   This VAT is collected from the customer and later
                   remitted to the government.
                 </p>
+
               ) : (
+
                 <p>
                   The amount you entered already includes VAT.
                   After removing the 7.5% VAT portion,
                   the original price of the goods or service is
                   <strong> ₦{original.toLocaleString()}</strong>.
                 </p>
+
               )}
 
               <p>
@@ -196,9 +292,7 @@ const VAT = () => {
 
         ) : (
 
-         <p className="empty"
-            
-          >
+          <p className="empty">
             Enter an amount and click Calculate VAT 
             to see a detailed VAT breakdown.
           </p>
@@ -208,7 +302,9 @@ const VAT = () => {
       </div>
 
     </div>
+
   );
+
 };
 
 export default VAT;

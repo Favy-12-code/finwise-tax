@@ -5,7 +5,7 @@ import piggy from "../images/piggy.png"
 const AboutSection = () => {
   return (
      <div className='About-section'>
-        <div className='About'>
+        <div id='About' className='About'>
             <h1 className='abt'>About Us</h1>
             <h1 className='abt2'>Making Tax Simple for Every <br/> <span className="text">Nigerian</span></h1>
             <h6 className='abt3'>Tax shouldn't feel confusing, overwhelming, or stressful. We built this platform to <br/>give Nigerians a smarter way to calculate and understand their taxes clearly, <br/> accurately, and instantly</h6>
