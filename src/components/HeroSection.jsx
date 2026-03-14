@@ -16,7 +16,6 @@ const HeroSection = () => {
       ></div>
       <div className="hero-container">
 
-        {/* LEFT SIDE TEXT */}
         <div className="hero-text">
           <h1>
             KNOW YOUR TAX <br />
@@ -29,7 +28,6 @@ const HeroSection = () => {
           </p>
         </div>
 
-        {/* RIGHT SIDE IMAGE */}
         <div className="hero-image">
           <img
             src={HeroImg}

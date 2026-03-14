@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import '../styles/Calculator.css'
+import '../styles/calculator.css'
 import { useLocation } from "react-router-dom";
 
 const PAYE = () => {
