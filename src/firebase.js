@@ -14,7 +14,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// For production this should stay false; for local phone auth test numbers, set this in the phone workflow only.
-// auth.settings.appVerificationDisabledForTesting = true; // removed from global export path
-
-export { auth };
+export { auth, RecaptchaVerifier };
+auth.settings.appVerificationDisabledForTesting = true;
