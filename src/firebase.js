@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, RecaptchaVerifier,  connectAuthEmulator } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBeFhIAsdUYf5UKndU0adp7yXQiv9l8xXE",
@@ -12,7 +12,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
-export { auth, RecaptchaVerifier };
-auth.settings.appVerificationDisabledForTesting = true;
+
+export  const auth = getAuth(app); ;

@@ -32,7 +32,7 @@ font-weight:600;
 text-transform:uppercase;
 }
 
-.footer-col a{
+.footer-col a, .calculator-col p{
 color:#082B42;
 text-decoration:none;
 font-size:14px;
@@ -41,7 +41,12 @@ font-weight: 400;
 cursor: pointer;
 }
 
-.footer-col a:hover{
+.calculator-col p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.footer-col a:hover, .calculator-col p:hover{
 color:#20242A;
 }
 
@@ -112,9 +117,7 @@ gap:35px;
     grid-template-columns: 3fr 1fr;
     gap: 30px;
   }
-  .resources-col, .calculator-col {
-    margin-left: -60px; 
-  }
+  
 }
 
 

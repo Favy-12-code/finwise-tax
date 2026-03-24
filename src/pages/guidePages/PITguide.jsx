@@ -1,8 +1,26 @@
 import '../../styles/Guide.css';
-
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 export default function PITguide() {
+  const location = useLocation();
+
+   useEffect(() => {
+    if (location.state?.scrollTo) {
+      const el = document.getElementById(location.state.scrollTo);
+
+      if (el) {
+        const offset = -80; 
+        const top = el.getBoundingClientRect().top + window.pageYOffset + offset;
+
+        window.scrollTo({
+          top,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [location]);
   return (
-    <div className="vat-guide">
+    <div className="vat-guide" id='pitGuide'>
 
       <div className="vat-section">
         <h2>Who Must File Personal Income Tax (PIT)</h2>

@@ -16,21 +16,20 @@ const [error,setError] = useState("");
 const location = useLocation();
 
   useEffect(() => {
-    if (location.hash) {
-      const el = document.querySelector(location.hash);
-
-      if (el) {
-        const offset = 80;
-        const top =
-          el.getBoundingClientRect().top + window.pageYOffset - offset;
-
-        window.scrollTo({
-          top,
-          behavior: "smooth",
-        });
+      if (location.state?.scrollTo) {
+        const el = document.getElementById(location.state.scrollTo);
+  
+        if (el) {
+          const offset = -80; 
+          const top = el.getBoundingClientRect().top + window.pageYOffset + offset;
+  
+          window.scrollTo({
+            top,
+            behavior: "smooth",
+          });
+        }
       }
-    }
-  }, [location]);
+    }, [location]);
 
 const formatNumber = (value) => {
   const num = value.replace(/,/g,"");

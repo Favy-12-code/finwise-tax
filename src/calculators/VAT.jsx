@@ -14,6 +14,22 @@ const VAT = () => {
 
   const location = useLocation();
 
+  useEffect(() => {
+      if (location.state?.scrollTo) {
+        const el = document.getElementById(location.state.scrollTo);
+  
+        if (el) {
+          const offset = -80; // adjust for header
+          const top = el.getBoundingClientRect().top + window.pageYOffset + offset;
+  
+          window.scrollTo({
+            top,
+            behavior: "smooth",
+          });
+        }
+      }
+    }, [location]);
+
   /* LOAD SAVED DATA */
 
   useEffect(() => {
@@ -102,31 +118,6 @@ const VAT = () => {
 
   };
 
-
-  /* SCROLL TO SECTION */
-
-  useEffect(() => {
-
-    if (location.hash) {
-
-      const el = document.querySelector(location.hash);
-
-      if (el) {
-
-        const offset = 80;
-
-        const top =
-          el.getBoundingClientRect().top + window.pageYOffset - offset;
-
-        window.scrollTo({
-          top,
-          behavior: "smooth",
-        });
-
-      }
-    }
-
-  }, [location]);
 
 
   return (

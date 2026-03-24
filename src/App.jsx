@@ -18,6 +18,8 @@ import PAYE from "./calculators/PAYE";
 import CalculatorIntro from "./calculators/CalculatorIntro";
 import ScrollToTop from "./components/ScrollToTop";
 import ScrollToHash from "./components/ScrollToHash";
+import PhoneSignup from "./pages/PhoneSignUp";
+
 
 function App() {
 
@@ -33,16 +35,8 @@ if ("scrollRestoration" in window.history) {
 }
 
 const guideSections = useRef({});
-  const [activeTab, setActiveTab] = useState("vat");
-  const scrollToGuideSection = (id) => {
-    setActiveTab(id);
-    const section = guideSections.current[id];
-    if (section) {
-      const yOffset = 50; 
-      const top = section.offsetTop + yOffset; 
-    window.scrollTo({ top, behavior: "smooth" });
-    }
-  };
+  const [activeTab, setActiveTab] = useState("vatGuide");
+  
 
   return (
     <Router>
@@ -68,8 +62,10 @@ const guideSections = useRef({});
         <Route path="/help" element={<Helppage/>} />
         <Route path="/features" element={<Features />} />
         <Route path="/contact" element={<Contact />} />
+        
       </Routes>
-      <Footer scrollToGuideSection={scrollToGuideSection} />
+      <Footer />
+    <PhoneSignup />
     </Router>
   );
 }

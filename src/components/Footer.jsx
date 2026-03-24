@@ -2,9 +2,24 @@ import React from "react";
 import "../styles/Footer.css";
 import logo1 from "../images/LogoImg.png";
 import logo2 from "../images/JekaImg.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation  } from "react-router-dom";
 
-export default function Footer({ scrollToGuideSection }) {
+export default function Footer() {
+   const navigate = useNavigate();
+  const location = useLocation();
+
+  const goToPageAndScroll = (path, sectionId) => {
+    navigate(path, { state: { scrollTo: sectionId } });
+  };
+
+  const goToGuide = () => {
+    navigate("/calculator/guide", { state: { scrollTo: "guideSection" } });
+  };
+
+  const isVatActive = location.pathname === "/calculator/vat";
+  const isPayeActive = location.pathname === "/calculator/paye";
+  const isBusinessActive = location.pathname === "/calculator/business";
+  const isGuideActive = location.pathname === "/calculator/guide";
   return (
     <footer>
       <div className="footer-main">
@@ -24,19 +39,19 @@ export default function Footer({ scrollToGuideSection }) {
             <a href="/help">Help Centre</a>
           </div>
 
-          <div className="footer-col">
+          <div className="footer-col calculator-col">
             <h3>Tax Guides</h3>
-            <Link to="/calculator/guide#vat">VAT Guide Nigeria</Link>
-            <Link to="/calculator/guide#paye">PAYE Guide Nigeria</Link>
-            <Link to="/calculator/guide#pit">PIT Guide Nigeria</Link>
-            <Link to="/calculator/guide#deadline">Tax Deadlines</Link>
+            <p onClick={() => goToPageAndScroll('/calculator/guide#vatGuide', 'vatGuide')}>VAT Guide Nigeria</p>
+            <p onClick={() => goToPageAndScroll('/calculator/guide#payeGuide', 'payeGuide')}>PAYE Guide Nigeria</p>
+            <p onClick={() => goToPageAndScroll('/calculator/guide#pitGuide', 'pitGuide')}>PIT Guide Nigeria</p>
+            <p onClick={() => goToPageAndScroll('/calculator/guide#guideDeadline', 'guideDeadline')}>Tax Deadlines</p>
           </div>
 
           <div className="footer-col calculator-col">
             <h3>Calculator</h3>
-            <a href="/calculator/vat">VAT Calculator</a>
-            <a href="/calculator/PAYE">PAYE Calculator</a>
-            <a href="/calculator/business">Business Tax</a>
+            <p onClick={() => goToPageAndScroll('/calculator/vat', 'vatSection')}>VAT Calculator</p>
+            <p onClick={() => goToPageAndScroll('/calculator/paye', 'payeSection')}>PAYE Calculator</p>
+            <p onClick={() => goToPageAndScroll('/calculator/business', 'businessSection')}>Business Tax</p>
           </div>
 
           <div className="footer-col">

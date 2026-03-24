@@ -844,12 +844,7 @@ transform:translateY(10px);
 }
 }
 
-.paye-section h3{
-  font-size: 20px;
-  color:#20242A;
-  margin-bottom: 20px;
-  font-weight: 600;
-}
+
 
 .paye-table {
   width: 100%;
@@ -953,6 +948,7 @@ transform:translateY(10px);
     text-align: left;
     display: inline-block; 
   }
+  
 }
 
 @media (max-width: 480px) {

@@ -4,23 +4,23 @@ import { useLocation } from "react-router-dom";
 export default function VATguide() {
   const location = useLocation();
 
-useEffect(() => {
-
-if(location.hash){
-
-const element = document.querySelector(location.hash);
-
-if(element){
-
-element.scrollIntoView({ behavior: "smooth" });
-
-}
-
-}
-
-},[location]);
+   useEffect(() => {
+        if (location.state?.scrollTo) {
+          const el = document.getElementById(location.state.scrollTo);
+    
+          if (el) {
+            const offset = -80; // adjust for header
+            const top = el.getBoundingClientRect().top + window.pageYOffset + offset;
+    
+            window.scrollTo({
+              top,
+              behavior: "smooth",
+            });
+          }
+        }
+      }, [location]);
   return (
-    <div className="vat-guide" id="vat">
+    <div className="vat-guide" id="vatGuide">
 
       <div className="vat-section">
         <h2>What is VAT?</h2>

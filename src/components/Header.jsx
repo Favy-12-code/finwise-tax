@@ -32,7 +32,6 @@ export default function Header() {
     };
   }, [menuOpen]);
 
-  // Handle logo click
   const handleLogoClick = () => {
     if (location.pathname === "/") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -41,7 +40,6 @@ export default function Header() {
     }
   };
 
-  // Helper to determine active class for hash links
   const getHashLinkClass = (hash) => {
     return location.hash === hash ? "active" : "";
   };

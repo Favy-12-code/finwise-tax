@@ -5,21 +5,21 @@ import '../../styles/Guide.css';
 
 export default function TaxDeadline() {
   const location = useLocation();
-  useEffect(() => {
-
-if(location.hash){
-
-const element = document.querySelector(location.hash);
-
-if(element){
-
-element.scrollIntoView({ behavior: "smooth" });
-
-}
-
-}
-
-},[location]);
+     useEffect(() => {
+      if (location.state?.scrollTo) {
+        const el = document.getElementById(location.state.scrollTo);
+  
+        if (el) {
+          const offset = -80; 
+          const top = el.getBoundingClientRect().top + window.pageYOffset + offset;
+  
+          window.scrollTo({
+            top,
+            behavior: "smooth",
+          });
+        }
+      }
+    }, [location]);
   const taxDeadlines = [
     {
       type: "Company Income Tax (CIT)",
@@ -67,9 +67,8 @@ element.scrollIntoView({ behavior: "smooth" });
   ];
 
   return (
-    <div className="tax-deadline-guide" id="deadline">
+    <div className="tax-deadline-guide" id="guideDeadline">
 
-      {/* Intro Section */}
       <div className="tax-section">
         <h2>Why You Need to Track Tax Deadlines</h2>
         <ul>

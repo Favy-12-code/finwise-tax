@@ -25,7 +25,7 @@ export default function Guide() {
  const location = useLocation();
  const navigate = useNavigate();
 
- const [activeTab, setActiveTab] = useState("vat");
+ const [activeTab, setActiveTab] = useState("vatGuide");
  const [savedGuides, setSavedGuides] = useState([]);
  const [previewOpen, setPreviewOpen] = useState(false);
  const [popupMessage, setPopupMessage] = useState(null);
@@ -35,28 +35,13 @@ export default function Guide() {
  const previewRef = useRef(null);
 
  const guides = [
-  { id: "vat", name: "VAT Guide 2026", component: <VATguide /> },
-  { id: "paye", name: "PAYE Guide 2026", component: <PAYEguide /> },
-  { id: "pit", name: "PIT Guide 2026", component: <PITguide /> },
-  { id: "deadline", name: "Tax Deadlines", component: <TaxDeadline /> }
+  { id: "vatGuide", name: "VAT Guide 2026", component: <VATguide /> },
+  { id: "payeGuide", name: "PAYE Guide 2026", component: <PAYEguide /> },
+  { id: "pitGuide", name: "PIT Guide 2026", component: <PITguide /> },
+  { id: "guideDeadline", name: "Tax Deadlines", component: <TaxDeadline /> }
  ];
+ 
 
- useEffect(() => {
-
-  if (location.hash) {
-
-    const section = location.hash.replace("#", "");
-
-    setActiveTab(section);
-
-    window.scrollTo({
-      top: 590,   
-      behavior: "smooth"
-    });
-
-  }
-
-}, [location]);
 
  useEffect(() => {
 
@@ -68,7 +53,6 @@ export default function Guide() {
 
  }, []);
 
- /* OPEN TAB FROM URL HASH */
 
  useEffect(() => {
 
@@ -93,10 +77,42 @@ export default function Guide() {
  const changeTab = (id) => {
 
   setActiveTab(id);
-
   navigate(`/calculator/guide#${id}`);
 
- };
+  setTimeout(() => {
+
+    const section = document.getElementById(id);
+
+    if (section) {
+
+      const sectionTop = section.offsetTop;
+
+      let offset = 220; 
+
+      const width = window.innerWidth;
+
+      if (width <= 60) {
+        offset = 100;
+      } else if (width > 300 && width <= 630) {
+        offset = 100
+      } else if (width > 631 && width <= 768) {
+        offset = 170;
+      } else if (width <= 1024) {
+        offset = 140;
+      } else {
+        offset = 120;
+      }
+
+      window.scrollTo({
+        top: sectionTop - offset,
+        behavior: "smooth"
+      });
+
+    }
+
+  }, 100);
+
+};
 
  const saveGuide = () => {
 
@@ -183,8 +199,6 @@ export default function Guide() {
 
  };
 
- /* PDF EXPORT */
-
  const exportPDF = async () => {
 
   if (!previewRef.current) return;
@@ -209,7 +223,6 @@ export default function Guide() {
 
  };
 
- /* SHARE GUIDE */
 
  const shareGuide = () => {
 
@@ -235,11 +248,28 @@ export default function Guide() {
 
  };
 
+ useEffect(() => {
+    if (location.state?.scrollTo) {
+      const el = document.getElementById(location.state.scrollTo);
+
+      if (el) {
+        const offset = -80; 
+        const top = el.getBoundingClientRect().top + window.pageYOffset + offset;
+
+        window.scrollTo({
+          top,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [location]);
+
+
  const activeGuide = guides.find((g) => g.id === activeTab);
 
  return (
 
-  <section className="guide-page">
+  <section className="guide-page" id="guideSection">
 
    <div className="guide-intro">
 
@@ -338,19 +368,21 @@ export default function Guide() {
 
        <h3>Preview {activeTab.toUpperCase()} Guide</h3>
 
-       <div ref={previewRef}>
+       <div className="pdf-preview-body"ref={previewRef}>
 
         {activeGuide?.component}
 
        </div>
 
-       <button onClick={exportPDF}>
-        Download PDF
-       </button>
+       <div className="pdf-preview-actions"> 
+          <button onClick={exportPDF}>
+            Download PDF
+          </button>
 
-       <button onClick={() => setPreviewOpen(false)}>
-        Close
-       </button>
+        <button onClick={() => setPreviewOpen(false)}>
+          Close
+        </button>
+       </div>
 
       </div>
 

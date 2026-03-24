@@ -1,7 +1,27 @@
 import '../../styles/Guide.css';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 export default function PAYEguide() {
+  const location = useLocation();
+
+   useEffect(() => {
+    if (location.state?.scrollTo) {
+      const el = document.getElementById(location.state.scrollTo);
+
+      if (el) {
+        const offset = -80; // adjust for header
+        const top = el.getBoundingClientRect().top + window.pageYOffset + offset;
+
+        window.scrollTo({
+          top,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [location]);
+
   return (
-    <div className="paye-guide" id='paye'>
+    <div className="paye-guide" id='payeGuide'>
 
       <div className="paye-section">
         <h2>What is PAYE?</h2>
@@ -15,7 +35,7 @@ export default function PAYEguide() {
       </div>
 
       <div className="paye-section">
-        <h3>2026 PAYE Tax Bracket (Annual)</h3>
+        <h2>2026 PAYE Tax Bracket (Annual)</h2>
 
         <div className="paye-table">
 
@@ -58,7 +78,7 @@ export default function PAYEguide() {
       </div>
 
       <div className="paye-section">
-        <h3>Allowable Deductions (Before Tax)</h3>
+        <h2>Allowable Deductions (Before Tax)</h2>
 
         <div className="paye-grid">
 
@@ -102,7 +122,7 @@ export default function PAYEguide() {
 
 
       <div className="paye-section">
-        <h3>PAYE Filing & Employer Obligations</h3>
+        <h2>PAYE Filing & Employer Obligations</h2>
 
         <div className="paye-obligations">
 
