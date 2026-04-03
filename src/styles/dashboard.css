@@ -82,15 +82,6 @@ overflow-x: hidden;
   transform: scale(1.03);
 }
 
-/* WELCOME */
-.welcome {
-  background: #0B3C5D;
-  color: #E7F5EE;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  font-weight: 500;
-}
 
 /* CALCULATOR */
 .calculator {

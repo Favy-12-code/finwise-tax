@@ -249,10 +249,6 @@ export default function Dashboarduser() {
           </button>
         </header>
 
-        {isNewUser && (
-          <div className="welcome"> Welcome to your smart dashboard!</div>
-        )}
-
         {/* CALCULATOR */}
         <section className="calculator">
           <h2>Tax Calculator</h2>
