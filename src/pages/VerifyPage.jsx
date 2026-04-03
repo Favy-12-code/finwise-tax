@@ -1,128 +1,302 @@
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import { useState, useEffect, useRef } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FiRefreshCw, FiHeadphones, FiCheck } from "react-icons/fi";
+import logo from "../images/LogoImg.png";
+import flags from "react-phone-number-input/flags";
+import { parsePhoneNumber } from "react-phone-number-input";
+import Profilesetup from "./Profilesetup";
+import bgImg from "../images/bgImg.png";
+import img1 from "../images/HeroImg.png";
+import '../styles/verify.css'
 
-const VerifyPage = ({ type, value, onBack }) => {
-  const [otp, setOtp] = useState(new Array(6).fill(""));
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [timer, setTimer] = useState(300); // 5 mins
+export default function VerifyPage({ type, value, onBack }) {
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [resending, setResending] = useState(false);
+  const [errorState, setErrorState] = useState(false);
 
+  
+
+  const [resent, setResent] = useState(false);
+  const [emptyOtpError, setEmptyOtpError] = useState(false);
+  const [otpSubmitted, setOtpSubmitted] = useState(false); 
+  const [verified, setVerified] = useState(false);
+  
   const inputsRef = useRef([]);
 
-  // TIMER
   useEffect(() => {
-    if (timer <= 0) return setExpired(true);
-    const interval = setInterval(() => setTimer((t) => t - 1), 1000);
-    return () => clearInterval(interval);
-  }, [timer]);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
 
-  const handleChange = (e, index) => {
-    const val = e.target.value.replace(/\D/, "");
-    if (!val) return;
-    let newOtp = [...otp];
-    newOtp[index] = val;
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      setExpired(true);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [timeLeft]);
+
+  const handleChange = (value, index) => {
+    if (!/^[0-9]?$/.test(value)) return;
+
+    const newOtp = [...otp];
+    newOtp[index] = value;
     setOtp(newOtp);
+    setErrorState(false);
+    setEmptyOtpError(false);
 
-    if (index < 5) {
+     if (otpSubmitted) setEmptyOtpError(false);
+
+    if (value && index < 3) {
       inputsRef.current[index + 1].focus();
-      setActiveIndex(index + 1);
     }
   };
 
-  const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace") {
-      let newOtp = [...otp];
-      newOtp[index] = "";
-      setOtp(newOtp);
-      if (index > 0) {
-        inputsRef.current[index - 1].focus();
-        setActiveIndex(index - 1);
-      }
+  const handleBackspace = (e, index) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputsRef.current[index - 1].focus();
     }
   };
 
   const handleVerify = async () => {
-    const otpString = otp.join("");
-    if (otpString.length < 6) return setError("Enter full OTP");
-    setLoading(true);
-    try {
-      const res = await axios.post("http://localhost:5000/verify-otp", {
-        [type]: value,
-        otp: otpString,
-      });
-      setMessage(res.data.message);
-      setError("");
-      setLoading(false);
-      setTimeout(() => {
-        window.location.href = "/login"; // Redirect after success
-      }, 1000);
-    } catch (err) {
-      setError(err.response?.data?.message || "Verification failed");
-      setLoading(false);
+    const code = otp.join("");
+    setOtpSubmitted(true);
+
+    if (code.length < 4) {
+      setEmptyOtpError(true);
+      return;
     }
+    setLoading(true);
+     setEmptyOtpError(false);
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/verify-otp`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ otp: code }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        setVerified(true)
+      } else {
+        setErrorState(true);
+      }
+    } catch {
+      setErrorState(true);
+    }
+
+    setLoading(false);
   };
 
   const handleResend = async () => {
+    setResending(true);
+
     try {
-      await axios.post("http://localhost:5000/resend-otp", { [type]: value });
-      setOtp(new Array(6).fill(""));
-      setTimer(300);
+      await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/resend-otp`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+
+      setTimeLeft(60);
       setExpired(false);
-      setMessage("New OTP sent ✅");
-      setActiveIndex(0);
-      inputsRef.current[0].focus();
-    } catch (err) {
-      setError("Failed to resend OTP");
-    }
+      setOtp(["", "", "", ""]);
+      setResent(true);
+      setOtpSubmitted(false);
+      setEmptyOtpError(false);
+        setErrorState(false); 
+    } catch {}
+
+    setResending(false);
   };
 
-  const formatTime = () => {
-    const min = Math.floor(timer / 60);
-    const sec = timer % 60;
-    return `${min}:${sec < 10 ? "0" : ""}${sec}`;
+  const handleCancel = async () => {
+    await fetch(
+      `${import.meta.env.VITE_API_URL}/api/auth/cancel-signup`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    onBack(); 
   };
+
+  if (verified) {
+    return <Profilesetup />;
+  }
+
+  const handlePaste = (e) => {
+  e.preventDefault();
+  const pasteData = e.clipboardData.getData("text").trim();
+  if (!/^\d{4}$/.test(pasteData)) return; 
+
+  const newOtp = pasteData.split("").slice(0, 4); 
+  setOtp(newOtp);
+
+  inputsRef.current[3].focus();
+};
 
   return (
     <div className="verify-page">
-      <h2>Verify OTP</h2>
-      <p>Code sent to {value}</p>
+      <div className="verify-left">
+        <img src={logo} className="verify-logo" />
 
-      <div className="otp-inputs">
-        {otp.map((num, idx) => (
-          <input
-            key={idx}
-            type="text"
-            maxLength={1}
-            value={num}
-            ref={(el) => (inputsRef.current[idx] = el)}
-            onChange={(e) => handleChange(e, idx)}
-            onKeyDown={(e) => handleKeyDown(e, idx)}
-            disabled={expired}
-          />
-        ))}
+        <h2>Enter Verification Code</h2>
+
+        {!expired && (
+          <p className="verify-text">
+            {resent ? "Code has been resent to " : "We have sent a code to "}
+            <span className="verify-value">
+              {type === "phone" && value ? (
+                (() => {
+                  const phoneNumber = parsePhoneNumber(value);
+                  const country = phoneNumber?.country;
+                  const Flag = country ? flags[country] : null;
+
+                  return (
+                    <span className="phone-display">
+                      {Flag && <Flag className="flag-icon" />}
+                      <span>{value}</span>
+                    </span>
+                  );
+                })()
+              ) : (
+                value
+              )}
+            </span>
+          </p>
+        )}
+
+        {!expired && <p className="timer">00:{timeLeft}s</p>}
+
+        {expired && (
+          <p className="expired">
+            Code sent to <span className="verify-value">
+              {type === "phone" && value ? (
+                (() => {
+                  const phoneNumber = parsePhoneNumber(value);
+                  const country = phoneNumber?.country;
+                  const Flag = country ? flags[country] : null;
+
+                  return (
+                    <span className="phone-display">
+                      {Flag && <Flag className="flag-icon" />}
+                      <span>{value}</span>
+                    </span>
+                  );
+                })()
+              ) : (
+                value
+              )}
+            </span> has expired. Resend Code to try again.{" "}
+          </p>
+        )}
+
+        {!expired && (
+          <div className="otp-container">
+            {otp.map((digit, i) => (
+              <input
+                key={i}
+                ref={(el) => (inputsRef.current[i] = el)}
+                type="text"
+                maxLength="1"
+                value={digit}
+                onChange={(e) => handleChange(e.target.value, i)}
+                onKeyDown={(e) => handleBackspace(e, i)}
+                onPaste={handlePaste}
+                className={`otp-input ${errorState ? "error-border" : ""} ${digit ? "filled" : ""}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {emptyOtpError && !expired && (
+          <p className="otp-error">Please enter the verification code</p>
+        )}
+
+        {!expired && (
+          <button className="verify-btn" onClick={handleVerify}>
+            {loading ? (
+              <AiOutlineLoading3Quarters className="spinner" />
+            ) : type === "phone" ? (
+              "Verify Phone"
+            ) : (
+              "Verify Email"
+            )}
+          </button>
+        )}
+
+
+          <button className="resend-btn" onClick={handleResend}>
+            {resending ? (
+              <AiOutlineLoading3Quarters className="spinner" />
+            ) : (
+              <>
+                <FiRefreshCw /> Resend Code
+              </>
+            )}
+          </button>
+    
+
+        <p className="helper">
+          Check your spam folder or{" "}
+          <span onClick={handleCancel}>try signing up again</span>
+        </p>
+
+        <p className="support">
+          Experiencing trouble?{" "}
+          <a href="/support">Contact support <FiHeadphones /></a>
+        </p>
       </div>
+      
+      <div className="verify-right">
+        <div className="verifyBg">
+          <img src={bgImg} alt="background" />
+        </div>
 
-      <p className="timer">Expires in: {formatTime()}</p>
+        <div className="verifyContent">
+          <div className="verifyImg">
+            <img src={img1} alt="Hero" />
+          </div>
 
-      <button onClick={handleVerify} disabled={loading || expired}>
-        {loading ? "Verifying..." : "Verify"}
-      </button>
-
-      {expired && (
-        <button onClick={handleResend}>Resend OTP</button>
-      )}
-
-      {message && <p className="success">{message}</p>}
-      {error && <p className="error">{error}</p>}
-
-      <p className="back" onClick={onBack}>
-        ← Back to Signup
-      </p>
+          <div className="contentInfo">
+            <div className="contentBox">
+              <FiCheck className="checkIcon" />
+              <h4>Instant PAYE calculations</h4>
+            </div>
+            <div className="contentBox">
+              <FiCheck className="checkIcon" />
+              <h4>Clear tax breakdown</h4>
+            </div>
+            <div className="contentBox">
+              <FiCheck className="checkIcon" />
+              <h4>Transport deductions</h4>
+            </div>
+            <div className="contentBox">
+              <FiCheck className="checkIcon" />
+              <h4>Simple interface</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+     
     </div>
+    
   );
-};
-
-export default VerifyPage;
+}

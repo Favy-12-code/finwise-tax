@@ -1,270 +1,329 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useRef, useEffect } from "react";
 import "react-phone-number-input/style.css";
-import {
-  FaExclamationCircle,
-  FaEnvelope,
-  FaPhone,
-  FaEye,
-  FaEyeSlash,
-} from "react-icons/fa";
+import { HiOutlineMail, HiOutlineDeviceMobile } from "react-icons/hi";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FiEye, FiEyeOff, FiCheck  } from "react-icons/fi";
 import bgImg from "../images/bgImg.png";
 import img1 from "../images/HeroImg.png";
 import logo from "../images/LogoImg.png";
 import VerifyPage from "./VerifyPage";
 import PhoneSignUp from "./PhoneSignUp";
+import '../styles/signup.css';
 
 const Signuppage = () => {
   const [method, setMethod] = useState("email");
   const [step, setStep] = useState("signup");
   const [verifyType, setVerifyType] = useState("");
   const [verifyValue, setVerifyValue] = useState("");
-  
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [infoMessage, setInfoMessage] = useState("");
 
   const [passwordMessage, setPasswordMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+ useEffect(() => {
+  const topPosition = window.innerWidth < 768 ? 100 : 0; // if screen width < 768px, scroll 100px
+  window.scrollTo({ top: topPosition, behavior: "smooth" });
+}, []);
+
+  const passwordTimer = useRef(null);
+   useEffect(() => {
+    if (passwordMessage.includes("✔")) {
+      if (passwordTimer.current) clearTimeout(passwordTimer.current);
+
+      passwordTimer.current = setTimeout(() => {
+        setPasswordMessage("");
+      }, 10000); 
+    }
+
+    return () => {
+      if (passwordTimer.current) clearTimeout(passwordTimer.current);
+    };
+  }, [passwordMessage]);
 
   const checkPassword = (value) => {
-    if (value.length < 6) return "Too short (min 6)";
-    if (!/[A-Z]/.test(value)) return "Add at least one uppercase letter";
-    if (!/[0-9]/.test(value)) return "Add at least one number";
+    if (value.length < 6) return "! Too short (min 6)";
+    if (!/[A-Z]/.test(value)) return "! Add at least one uppercase letter";
+    if (!/[0-9]/.test(value)) return "! Add at least one number";
     if (!/[!@#$%^&*]/.test(value))
-      return "Add at least one special character (!@#$%^&*)";
+      return "! Add at least one special character (!@#$%^&*)";
     return "Strong password ✔";
   };
 
   const checkEmail = (value) => {
     const emailRegex = /^\S+@\S+\.\S+$/;
     if (!value) return "";
-    if (!emailRegex.test(value)) return "Please enter a valid email address";
+    if (!emailRegex.test(value)) return "! Please enter a valid email address";
     return "";
-  };
-
-  const showTempMessage = (msg) => {
-    setInfoMessage(msg);
-    setTimeout(() => setInfoMessage(""), 20000); 
   };
 
   const handleEmailSignup = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setSubmitted(true);
     let formErrors = {};
 
-    if (!name) formErrors.name = "Please enter your name";
-    if (!email) formErrors.email = "Please enter your email";
+    if (!name) formErrors.name = "! Please enter your name";
+    if (!email) formErrors.email = "! Please enter your email";
     else {
       const liveEmailError = checkEmail(email);
       if (liveEmailError) formErrors.email = liveEmailError;
     }
 
-    if (!password) formErrors.password = "Please enter your password";
+    if (!password) formErrors.password = "! Please enter your password";
     else {
       const msg = checkPassword(password);
       if (msg !== "Strong password ✔") formErrors.password = msg;
     }
 
-    if (!terms) formErrors.terms = "You must accept Terms & Conditions";
+    setPasswordMessage("")
+
+    if (!terms) formErrors.terms = "! You must accept Terms & Conditions";
 
     setErrors(formErrors);
-    if (Object.keys(formErrors).length > 0) return;
+    if (Object.keys(formErrors).length > 0) {
+      setLoading(false);
+      return;
+    } 
+
 
     try {
-      const res = await fetch("http://localhost:4000/api/auth/register", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name,
           email,
-          password
+          password,
         }),
-        credentials: "include"
-       });
-
-      setEmail("");
-      setPassword("");
-      setPasswordMessage("");
-      setTerms(false);
-      setName("");
-      setErrors({});
-      setVerifyType("email");
-      setVerifyValue(email);
-      setStep("verify");
+        credentials: "include",
+      });
 
       const data = await res.json();
       console.log(data);
 
       if (data.success) {
-        alert("OTP sent 🚀");
+        setName("");
+        setEmail("");
+        setPassword("");
+        setPasswordMessage("");
+        setTerms(false);
+        setErrors({});
+
+        setVerifyType("email");
+        setVerifyValue(email);
+        setStep("verify");
+        
       } else {
-        alert(data.message);
+        setErrors({ form: data.message});
       }
     } catch (error) {
-      setErrors({ form: error.response?.data?.message || "Signup failed" });
+      setErrors({ form: "Signup failed" });
     }
+    setLoading(false);
   };
 
- 
-  return (
+  const handleMethodChange = (type) => {
+  setMethod(type);
+
+  setName("");
+  setEmail("");
+  setPassword("");
+  setPasswordMessage("");
+  setTerms(false);
+  setErrors({});
+};
+
+const handlePhoneSignupSuccess = (phone) => {
+    setVerifyType("phone");
+    setVerifyValue(phone);
+    setStep("verify"); 
+};
+
+const [submitted, setSubmitted] = useState(false);
+
+
+
+  return step === "signup" ? (
     <div className="signup-page">
       <div className="signup-left">
-        {step === 'signup' ? (
           <div className="signupContent">
-            <img src={logo} className="signup-logo" />
-            <h2>Create an Account</h2>
-            <p>Create your account and simplify tax calculations.</p>
+            <div className="signupHead">
+              <img src={logo} className="signup-logo" />
+              <h2>Create an account</h2>
+              <p>Create your account and simplify tax calculations.</p>
+            </div>
 
             <div className="signupForm">
-              <div className="signupMethod">
-                <div
-                  className={`method-box ${method === "email" ? "active" : ""}`}
-                  onClick={() => setMethod("email")}
-                >
-                  <FaEnvelope /> Email
-                </div>
-                <div
-                  className={`method-box ${method === "phone" ? "active" : ""}`}
-                  onClick={() => setMethod("phone")}
-                >
-                  <FaPhone /> Phone
+              <div className="methodBox">
+                <div className="signupMethod">
+                  <div
+                    className={`method-box ${method === "email" ? "active" : ""}`}
+                  onClick={() => handleMethodChange("email")}
+                  >
+                    <HiOutlineMail /> Email
+                  </div>
+                  <div
+                    className={`method-box ${method === "phone" ? "active" : ""}`}
+                    onClick={() => handleMethodChange("phone")}
+                  >
+                    <HiOutlineDeviceMobile /> Phone
+                  </div>
                 </div>
               </div>
 
               {method === "email" && (
-                <form onSubmit={handleEmailSignup}>
+                <form onSubmit={handleEmailSignup} autoComplete="off">
                   <div className="nameInput">
-                    <label>Name:</label>
+                    <label className="label">Name</label>
                     <input
                       type="text"
                       value={name}
-                       onChange={(e) => {
+                      className={errors.name ? "input-error" : "formInput"}
+                      onChange={(e) => {
                         const value = e.target.value;
                         setName(value);
-                        setErrors((prev) => ({ ...prev, password: "" }))
+                        setErrors((prev) => ({ ...prev, name: "" }));
                       }}
                       placeholder="Your Name"
                     />
-                    {errors.name && (
+
+                    <div className="spanError">
+                      {errors.name && (
                       <span className="error">
-                        <FaExclamationCircle style={{ marginRight: 5 }} />
                         {errors.name}
                       </span>
                     )}
+                    </div>
                   </div>
 
                   <div className="emailInput">
-                    <label>Email</label>
+                    <label className="label">Email Address</label>
                     <input
-                      type="email"
+                      type="text"
                       value={email}
+                      autoComplete="new-email"
+                      className={submitted && errors.email ? "input-error" : "formInput"}
                       onChange={(e) => {
                         const value = e.target.value;
                         setEmail(value);
                         setErrors((prev) => ({
                           ...prev,
                           email: checkEmail(value),
+                          form: value ? prev.form : ""
                         }));
                       }}
                       placeholder="yourname@gmail.com"
                     />
-                    {errors.email && (
+                    <div className="spanError">
+                      {errors.email && (
                       <span className="error">
-                        <FaExclamationCircle style={{ marginRight: 5 }} />
                         {errors.email}
                       </span>
                     )}
+                    </div>
+                    
                   </div>
 
                   <div className="PasswordInput">
-                    <label>Password</label>
-                    <input
+                    <label className="label">Password</label>
+
+                    <div className="input-wrapper">
+                      <input
                       type={showPassword ? "text" : "password"}
                       value={password}
+                      autoComplete="new-password"
+                      className={errors.password ? "input-error" : "formInput"}
                       onChange={(e) => {
                         const value = e.target.value;
                         setPassword(value);
+
                         const msg = checkPassword(value);
                         setPasswordMessage(msg);
-                         setErrors((prev) => ({ ...prev, password: "" }))
-                        if (!msg.includes("✔")) {
-                          const timer = setTimeout(() => setPasswordMessage(""), 20000);
-                          return () => clearTimeout(timer);
-                        }
-                      }}
-                       
-                   
-                      placeholder="Minimum of 6 characters"
-                    />
-                    <span
-                      className="eye"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
-                    </span>
 
-                    {password && passwordMessage && (
+                        setErrors((prev) => ({ ...prev, password: "" }));
+
+                      
+                      }}
+                      placeholder="Minimum of 6 characters"
+                      />
+
                       <span
-                        className={passwordMessage.includes("✔") ? "success" : "error"}
+                        className="eye"
+                        onClick={() => setShowPassword(!showPassword)}
                       >
+                        {showPassword ? <FiEyeOff /> : <FiEye />}
+                      </span>
+                    </div>
+
+                    <div className="spanError">
+                      {!errors.password && password && passwordMessage && (
+                      <span className={passwordMessage.includes("✔") ? "success" : "error"}>
                         {passwordMessage}
                       </span>
-                    )}
+                      )}
 
-                    {errors.password && !password && (
-                      <span className="error">
-                        <FaExclamationCircle style={{ marginRight: 5 }} />
-                        {errors.password}
-                      </span>
-                    )}
+                      {errors.password && <span className="error">{errors.password}</span>}
+                    </div>
                   </div>
 
                   <div className="terms">
-                    <input
-                      type="checkbox"
-                      checked={terms}
-                      onChange={() => {
-                        setTerms(!terms);
-                        setErrors((prev) => {
-                          const { terms, ...rest } = prev;
-                          return rest;
-                        });
-                      }}
-                    />
-                    <p>
-                      I accept <a href="/terms">Terms & Conditions</a>
-                    </p>
-                    {errors.terms && (
-                      <span className="error">
-                        <FaExclamationCircle style={{ marginRight: 5 }} />
-                        {errors.terms}
-                      </span>
-                    )}
-                    <button className="signup-btn" type="submit">
-                      Create Account
-                    </button>
-                    {errors.form && <span className="error">{errors.form}</span>}
+                    <label className="terms-label">
+                      <input
+                        type="checkbox"
+                        checked={terms}
+                        onChange={() => {
+                          setTerms(!terms);
+                          setErrors((prev) => {
+                            const { terms, ...rest } = prev;
+                            return rest;
+                          });
+                        }}
+                      />
+                      <span className="customCheck">{terms && <FiCheck />}</span>
+                      <p className="labelP">
+                        I accept <a href="/terms">Terms & Conditions</a>
+                      </p>
+                    </label>
+                      
+                    <div className="spanError">
+                        {errors.terms && <span>{errors.terms}</span>}
+                    </div> 
                   </div>
-              </form>
-            )}
 
-            {method === "phone" && (
-              <PhoneSignUp />
-            )}
+                    <button className="signup-btn" type="submit" disabled={loading}>
+                      {loading ? (
+                        <AiOutlineLoading3Quarters className="spinnerLoad" />
+                      ) : (
+                        "Create Account"
+                      )}
+                    </button>
+
+                    {errors.form && (
+                      <div className="form-error">
+                        {errors.form}
+                      </div>
+                    )}
+
+                    <p className="SIGNin">
+                      Already have an account? <a href="/signin">Sign in</a>
+                    </p>
+                
+                </form>
+              )}
+
+              {method === "phone" && <PhoneSignUp onSuccess={handlePhoneSignupSuccess} />}
+  
+            </div>
           </div>
-        </div>
-        ) : (
-          <VerifyPage
-            type={verifyType}
-            value={verifyValue}
-            onBack={() => setStep("signup")}
-          />
-        )}  
+        
       </div>
 
       <div className="signup-right">
@@ -279,28 +338,33 @@ const Signuppage = () => {
 
           <div className="contentInfo">
             <div className="contentBox">
+              <FiCheck className="checkIcon" />
               <h4>Instant PAYE calculations</h4>
             </div>
-
             <div className="contentBox">
+              <FiCheck className="checkIcon" />
               <h4>Clear tax breakdown</h4>
             </div>
-
             <div className="contentBox">
+              <FiCheck className="checkIcon" />
               <h4>Transport deductions</h4>
             </div>
-
             <div className="contentBox">
+              <FiCheck className="checkIcon" />
               <h4>Simple interface</h4>
             </div>
           </div>
         </div>
-
-        <h1>Smart Tax Tools</h1>
-        <p>Calculate and understand Nigerian taxes easily.</p>
       </div>
     </div>
-  );
+    ) : (
+    <VerifyPage
+      type={verifyType}
+      value={verifyValue}
+      onBack={() => setStep("signup")}
+    />
+  )
+
 };
 
 export default Signuppage;
