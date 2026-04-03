@@ -10,12 +10,12 @@ body {
   background-color: #FFFFFF;
   height: 80vh;
   scroll-margin-top: 100px;
+  color: #000;
 }
 
 .abt {
   font-size: 20px;
   font-weight: bold;
-  color: #000000;
   margin-bottom: 10px;
 }
 .text {  color:#149443;
