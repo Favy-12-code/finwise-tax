@@ -17,7 +17,6 @@ export default function Header() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Close menu if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuOpen && headerRef.current && !headerRef.current.contains(event.target)) {
@@ -33,12 +32,13 @@ export default function Header() {
   }, [menuOpen]);
 
   const handleLogoClick = () => {
-    if (location.pathname === "/") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      navigate("/");
-    }
-  };
+  navigate("/"); 
+
+  // force scroll to top AFTER navigation
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 100);
+};
 
   const getHashLinkClass = (hash) => {
     return location.hash === hash ? "active" : "";

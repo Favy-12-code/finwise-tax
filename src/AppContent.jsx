@@ -24,6 +24,7 @@ import Profilesetup from "./pages/Profilesetup";
 import ScrollToTop from "./components/ScrollToTop";
 import ScrollToHash from "./components/ScrollToHash";
 import Dashboarduser from "./Dashboarduser";
+import Terms from "./pages/Terms";
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppContent() {
@@ -72,6 +73,7 @@ export default function AppContent() {
         <Route path="/help" element={<Helppage />} />
         <Route path="/features" element={<Features />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/terms" element={<Terms />} />
 
         <Route path="/profile-setup" element={<Profilesetup />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboarduser /></ProtectedRoute>} />

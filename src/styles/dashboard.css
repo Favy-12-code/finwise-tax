@@ -82,7 +82,55 @@ overflow-x: hidden;
   transform: scale(1.03);
 }
 
+/* Loader Container */
+.loader {
+  display: flex;
+  justify-content: center;  /* Center horizontally */
+  align-items: center;      /* Center vertically */
+  height: 100vh;            /* Full viewport height */
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;           /* Nice green color */
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
 
+/* Animated dots */
+.loader::after {
+  content: " ";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-left: 0.5rem;
+  border-radius: 50%;
+  background: #4CAF50;
+  animation: loaderBounce 0.6s infinite alternate;
+}
+
+.loader::before {
+  content: " ";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: #4CAF50;
+  animation: loaderBounce 0.6s infinite alternate;
+  animation-delay: 0.3s;
+}
+
+/* Bounce animation */
+@keyframes loaderBounce {
+  from {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(-15px);
+    opacity: 1;
+  }
+}
 /* CALCULATOR */
 .calculator {
   margin-top: 100px;

@@ -57,7 +57,7 @@ button {
 }
 
 .signupHead .signup-logo {
-  width: 12vw;
+  width: 15vw;
   max-width: 1400px;
   min-width: 80px;
   margin-bottom: 10px;
@@ -191,7 +191,7 @@ form {
 
 .input-wrapper .eye {
   position: absolute;
-  right: 1vw;
+  right: 2vw;
   top: 70%;
   transform: translateY(-70%);
   font-size: 18px;
@@ -342,6 +342,7 @@ form {
   text-align: center;
   color: #292F36;
   font-size: 16px;
+  cursor: pointer;
 }
 .SIGNin a:hover {
   text-decoration: underline;
@@ -537,10 +538,24 @@ form {
   .signupHead p {
     font-size: 14px;
   }
+
+  .signupHead .signup-logo {
+    width: 28vw;
+    max-width: 1900px;
+    margin-top: 10px;
+  }
+  
+
 }
 
 
 @media (max-width: 578px) {
+
+  
+.signupHead .signup-logo {
+  width: 29vw;
+}
+
 
   .signup-page,
   .verify-page
@@ -609,10 +624,18 @@ form {
     font-size: 14px;
     padding: 12px 16px;
   }
+  
+.input-wrapper .eye {
+  right: 3vw;
+}
 }
 
 @media (max-width: 480px) {
-
+.signupHead .signup-logo {
+  width: 35vw;
+  max-width: 1900px;
+  margin-top: 10px;
+}
   .signup-right,
   .verify-right
   {
@@ -652,10 +675,14 @@ form {
     font-size: 13px;
     padding: 12px;
   }
+   
+.input-wrapper .eye {
+  right: 3.5vw;
+}
 }
 
 
-@media (max-width: 300px) {
+@media (max-width: 350px) {
   .signup-page,
   .verify-page
   {

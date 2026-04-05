@@ -11,7 +11,7 @@ import '../styles/verify.css'
 
 export default function VerifyPage({ type, value, onBack }) {
   const [otp, setOtp] = useState(["", "", "", ""]);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(300);
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -245,7 +245,7 @@ export default function VerifyPage({ type, value, onBack }) {
 
           <button className="resend-btn" onClick={handleResend}>
             {resending ? (
-              <AiOutlineLoading3Quarters className="spinner" />
+              <AiOutlineLoading3Quarters className="spinnerLoad" />
             ) : (
               <>
                 <FiRefreshCw /> Resend Code

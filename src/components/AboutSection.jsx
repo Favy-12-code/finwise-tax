@@ -8,8 +8,8 @@ const AboutSection = () => {
         <div id='About' className='About'>
             <h1 className='abt'>About Us</h1>
             <h1 className='abt2'>Making Tax Simple for Every <br/> <span className="text">Nigerian</span></h1>
-            <h6 className='abt3'>Tax shouldn't feel confusing, overwhelming, or stressful. We built this platform to <br/>give Nigerians a smarter way to calculate and understand their taxes clearly, <br/> accurately, and instantly</h6>
-            <p className='abt4'>Whether you're a salary earner, freelancer, or business owner, you deserve full clarity on <br/> what you earn, what you owe, and why.</p>
+            <h6 className='abt3'>Tax shouldn’t feel confusing or stressful. We help Nigerians calculate and understand their taxes clearly and instantly.</h6>
+            <p className='abt4'>Whether you're a salary earner, freelancer, or business owner, get clear insight into what you earn and what you owe.</p>
         </div>
         <div className='problem-section'>
           <div className='The-problem'>

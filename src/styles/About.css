@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
 .About {
   display: flex;
   flex-direction: column;
@@ -14,34 +15,43 @@ body {
 }
 
 .abt {
-  font-size: 20px;
+  font-size: 35px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
 }
 .text {  color:#149443;
 }
 .abt2 {
-  font-size: 40px;
+  font-size: 30px;
   font-weight: bold;
   color: #000000;
   text-align: center;
+  margin-bottom: 30px;
 }
 .abt3 {
   font-size: 16px;
   color: #000000;
   text-align: center;
   margin-top: 0px;
+  margin-bottom: 30px;
+  max-width: 500px;
 }
 .abt4 {
   font-size: 16px;
   color: #000000;
   text-align: center;
   margin-top: 0px;
+  max-width: 600px;
 }
+
 @media (max-width: 1100px) {
 
   .abt2 {
-    font-size: 34px;
+    font-size: 24px;
+  }
+
+  .abt3, .abt2 {
+    margin-bottom: 20px;
   }
 
   .abt3,
@@ -60,11 +70,11 @@ body {
   }
 
   .abt {
-    font-size: 18px;
+    font-size: 25px;
   }
 
   .abt2 {
-    font-size: 30px;
+    font-size: 20px;
     line-height: 1.3;
   }
 
@@ -77,10 +87,6 @@ body {
 }
 
 @media (max-width: 480px) {
-
-  .abt {
-    font-size: 16px;
-  }
 
   .abt2 {
     font-size: 24px;
@@ -95,9 +101,16 @@ body {
 }
 
 @media (max-width: 360px) {
-
+  .abt{
+    margin-bottom: 20px;
+  }
   .abt2 {
     font-size: 20px;
+    
+  }
+
+  .abt3{
+    margin-bottom: 20px;
   }
 
   .abt3,
@@ -107,6 +120,8 @@ body {
   }
 
 }
+
+
 .problem-section {
   background-color: #E7F5EE;
   display: flex;
@@ -130,12 +145,14 @@ body {
   font-size: 16px;
   color: #DC2626;
   margin-top: 0px;
+  margin-bottom: 25px;
 }
 
 .prob1 {
   font-size: 30px;
   font-weight: bold;
   color: #082B42;
+  margin-bottom: 15px;
 }
 
 .The-problem p{
@@ -147,12 +164,14 @@ body {
   font-size: 16px;
   color:#149443;
   margin-top: 50px;
+  margin-bottom: 25px;
 }
 
 .sol1 {
-  font-size: 35px;
+  font-size: 30px;
   font-weight: bold;
   color: #082B42;
+  margin-bottom: 15px;
 }
 
 .image-sec {
@@ -182,15 +201,31 @@ body {
     max-width: 420px;
   }
 
+  
+.The-problem p{
+  font-size: 12px;
+  font-weight: 400;
+}
+
+}
+
+@media (max-width: 766px) {
+   .prob1 {
+    font-size: 20px;
+  }
+
+  .sol1 {
+    font-size: 20px;
+  }
 }
 @media (max-width: 500px) {
 
   .prob1 {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .sol1 {
-    font-size: 28px;
+    font-size: 20px;
   }
 
   .image {

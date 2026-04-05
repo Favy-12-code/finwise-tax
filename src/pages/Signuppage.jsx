@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "react-phone-number-input/style.css";
 import { HiOutlineMail, HiOutlineDeviceMobile } from "react-icons/hi";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -16,6 +17,7 @@ const Signuppage = () => {
   const [verifyType, setVerifyType] = useState("");
   const [verifyValue, setVerifyValue] = useState("");
 
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,11 +27,17 @@ const Signuppage = () => {
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const signupLeftRef = useRef(null);
+  const formRef = useRef(null);
 
- useEffect(() => {
-  const topPosition = window.innerWidth < 768 ? 100 : 0; // if screen width < 768px, scroll 100px
-  window.scrollTo({ top: topPosition, behavior: "smooth" });
-}, []);
+  useEffect(() => {
+    if (signupLeftRef.current) {
+      signupLeftRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, []);
 
   const passwordTimer = useRef(null);
    useEffect(() => {
@@ -131,15 +139,24 @@ const Signuppage = () => {
   };
 
   const handleMethodChange = (type) => {
-  setMethod(type);
+    setMethod(type);
 
-  setName("");
-  setEmail("");
-  setPassword("");
-  setPasswordMessage("");
-  setTerms(false);
-  setErrors({});
-};
+    setName("");
+    setEmail("");
+    setPassword("");
+    setPasswordMessage("");
+    setTerms(false);
+    setErrors({});
+
+    if (window.innerWidth <= 760 && formRef.current) {
+      setTimeout(() => {
+        formRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 100);
+    }
+  };
 
 const handlePhoneSignupSuccess = (phone) => {
     setVerifyType("phone");
@@ -153,15 +170,15 @@ const [submitted, setSubmitted] = useState(false);
 
   return step === "signup" ? (
     <div className="signup-page">
-      <div className="signup-left">
-          <div className="signupContent">
-            <div className="signupHead">
+      <div className="signup-left" ref={signupLeftRef}>
+          <div className="signupContent" >
+            <div className="signupHead" ref={formRef}>
               <img src={logo} className="signup-logo" />
               <h2>Create an account</h2>
               <p>Create your account and simplify tax calculations.</p>
             </div>
 
-            <div className="signupForm">
+            <div className="signupForm" >
               <div className="methodBox">
                 <div className="signupMethod">
                   <div
@@ -289,7 +306,7 @@ const [submitted, setSubmitted] = useState(false);
                       />
                       <span className="customCheck">{terms && <FiCheck />}</span>
                       <p className="labelP">
-                        I accept <a href="/terms">Terms & Conditions</a>
+                        I accept <a onClick={() => navigate("/terms")}>Terms & Conditions</a>
                       </p>
                     </label>
                       
@@ -313,7 +330,7 @@ const [submitted, setSubmitted] = useState(false);
                     )}
 
                     <p className="SIGNin">
-                      Already have an account? <a href="/signin">Sign in</a>
+                      Already have an account? <a onClick={() => navigate("/signin")}>Sign in</a>
                     </p>
                 
                 </form>

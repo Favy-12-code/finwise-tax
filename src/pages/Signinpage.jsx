@@ -159,8 +159,8 @@ const handleResendOtp = async () => {
     setTimeLeft(60);
     setExpired(false);
     setOtpArray(["", "", "", ""]);
-    setOtp("");                    // ✅ CLEAR
-    setOtpError(false);            // ✅ CLEAR
+    setOtp("");                    
+    setOtpError(false);          
     setFormError("");  
   } catch {}
 
@@ -251,7 +251,8 @@ const handleResendOtp = async () => {
 
       if (data.success) {
         setFormError("");
-       navigate("/dashboard")
+        localStorage.setItem("token", data.token);
+        navigate("/dashboard");
       } else {
         setFormError(data.message);
       }
@@ -656,7 +657,7 @@ const handleForgotClick = () => {
             )}
           </div>
 
-          <p className="signupBtn">You don't have an account yet? <a href="/signup">Sign up</a></p>
+          <p className="signupBtn">You don't have an account yet? <a onClick={() => navigate("/signup")}>Sign up</a></p>
         </div>
       </div>
 

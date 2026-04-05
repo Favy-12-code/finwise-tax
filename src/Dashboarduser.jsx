@@ -1,78 +1,4 @@
-// import { useEffect, useState } from "react";
 
-// export default function Dashboarduser() {
-//   const [user, setUser] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   const API = import.meta.env.VITE_API_URL;
-
-//   useEffect(() => {
-//     const fetchDashboard = async () => {
-//       try {
-//         const res = await fetch(`${API}/api/dashboard`, {
-//           credentials: "include",
-//         });
-
-//         const data = await res.json();
-
-//         if (data.success) {
-//           setUser(data.data);
-//         } else {
-//           console.log("Backend error:", data.message);
-//         }
-//       } catch (err) {
-//         console.error("Fetch error:", err);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchDashboard();
-//   }, [API]);
-
-//   // 🔄 Loading state
-//   if (loading) {
-//     return <div className="spinner">Loading...</div>;
-//   }
-
-//   // ❌ If no user (token failed or not logged in)
-//   if (!user) {
-//     return (
-//       <div style={{ padding: "20px" }}>
-//         <h2>Session expired ⚠️</h2>
-//         <p>Please log in again.</p>
-//       </div>
-//     );
-//   }
-
-//   // ✅ Dashboard UI
-//   return (
-//     <div className="dashboard" style={{ padding: "20px" }}>
-//       <h1>Welcome, {user.firstName || "User"} 👋</h1>
-
-//       {/* USER INFO */}
-//       <div className="card">
-//         <h3>Your Info</h3>
-//         <p>Name: {user.firstName || "Not set"}</p>
-//         <p>Email: {user.email || "Not set"}</p>
-//         <p>Employment: {user.employment || "Not set"}</p>
-//         <p>Income: {user.incomeRange || "Not set"}</p>
-//         <p>Housing: {user.housing || "Not set"}</p>
-//         <p>Tax Status: {user.taxStatus || "Not set"}</p>
-//       </div>
-
-//       {/* LAST LOGIN */}
-//       <div className="card">
-//         <h3>Last Login</h3>
-//         <p>
-//           {user.lastLogin
-//             ? new Date(user.lastLogin).toLocaleString()
-//             : "First time login"}
-//         </p>
-//       </div>
-//     </div>
-//   );
-// }
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/dashboard.css";
@@ -102,9 +28,14 @@ export default function Dashboarduser() {
 
   useEffect(() => {
     const fetchUser = async () => {
+      const token = localStorage.getItem("token");
       try {
       const res = await fetch(`${API}/api/dashboard`, {
         credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
       const data = await res.json();
@@ -166,8 +97,7 @@ export default function Dashboarduser() {
 
      localStorage.clear();
 
-  // 🔥 force reload to reset app state
-  window.location.href = "/login";
+  navigate("/");
   };
 
   // 🔥 CALCULATIONS
@@ -249,7 +179,6 @@ export default function Dashboarduser() {
           </button>
         </header>
 
-        {/* CALCULATOR */}
         <section className="calculator">
           <h2>Tax Calculator</h2>
 
