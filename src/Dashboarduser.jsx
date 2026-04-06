@@ -89,8 +89,6 @@ export default function Dashboarduser() {
     
     localStorage.removeItem("hasVisitedDashboard");
 
-    localStorage.clear();
-
     navigate("/");
   };
 
