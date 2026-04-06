@@ -28,47 +28,81 @@ export default function Dashboarduser() {
 
   useEffect(() => {
   const fetchUser = async () => {
-    const token = localStorage.getItem("token"); // optional if backend uses cookie
+    const token = localStorage.getItem("token"); // optional if using cookie
     if (!token) {
       setLoading(false);
-      return;
+      return; // do not call dashboard API if not logged in yet
     }
 
     try {
       const res = await fetch(`${API}/api/dashboard`, {
-        credentials: "include", // needed for HttpOnly cookie
+        credentials: "include",
         headers: {
-          Authorization: `Bearer ${token}`, // optional if using cookie
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
 
-      const data = await res.json();
+      if (!res.ok) {
+        // API route might not exist or token invalid
+        console.error("Dashboard fetch failed:", res.status);
+        setLoading(false);
+        return;
+      }
 
+      const data = await res.json();
       if (data.success) {
         setUser(data.data);
-
-        if (!localStorage.getItem("hasVisitedDashboard")) {
-          setIsNewUser(true);
-          localStorage.setItem("hasVisitedDashboard", "true");
-        }
-
-        const stored = localStorage.getItem("activity");
-        if (stored) setActivity(JSON.parse(stored));
-      } else {
-        handleLogout();
       }
     } catch (err) {
-      console.error("Failed to fetch dashboard:", err);
-      handleLogout(); // optional
+      console.error("Dashboard fetch error:", err);
     } finally {
       setLoading(false);
     }
   };
 
   fetchUser();
-}, [navigate]); // include navigate to avoid closure issues
+}, [navigate]);
 
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const token = localStorage.getItem("token");
+  //     try {
+  //     const res = await fetch(`${API}/api/dashboard`, {
+  //       credentials: "include",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (data.success) {
+  //       setUser(data.data);
+
+  //       const hasVisited = localStorage.getItem("hasVisitedDashboard");
+  //       if (!hasVisited) {
+  //         setIsNewUser(true);
+  //         localStorage.setItem("hasVisitedDashboard", "true");
+  //       }
+
+  //       const stored = localStorage.getItem("activity");
+  //       if (stored) setActivity(JSON.parse(stored));
+  //     }
+
+  //   } catch (err) {
+  //     // Do NOT navigate here
+  //     console.error("Failed to fetch dashboard:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  //   fetchUser();
+  // }, []);
+
+  // 🔥 SAVE ACTIVITY
   const saveActivity = (newData) => {
     setActivity(newData);
     localStorage.setItem("activity", JSON.stringify(newData));
@@ -93,15 +127,36 @@ export default function Dashboarduser() {
     saveActivity([]);
   };
 
+  // const handleLogout = async () => {
+  //   await fetch(`${API}/api/auth/logout`, { credentials: "include" });
+    
+  //   localStorage.removeItem("hasVisitedDashboard");
+
+  //   localStorage.clear();
+
+  //   navigate("/");
+  // };
+
   const handleLogout = async () => {
-    await fetch(`${API}/api/auth/logout`, { credentials: "include" });
-    localStorage.removeItem("hasVisitedDashboard");
-
+  const token = localStorage.getItem("token");
+  if (!token) {
+    // nothing to do, just navigate home
     localStorage.clear();
-    localStorage.removeItem("token");
     navigate("/");
-  };
+    return;
+  }
 
+  try {
+    await fetch(`${API}/api/auth/logout`, { credentials: "include", method: "POST" });
+  } catch (err) {
+    console.error("Logout failed:", err);
+  }
+
+  localStorage.clear();
+  navigate("/");
+};
+
+  // 🔥 CALCULATIONS
   const calculateVAT = () => {
     if (!vatInput) return;
     const vat = Number(vatInput) * 0.075;

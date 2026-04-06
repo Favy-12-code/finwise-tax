@@ -91,7 +91,7 @@ overflow-x: hidden;
 
 .spinnerLoad {
   animation: spin 1s linear infinite;
-  align-items: center;
+  text-align: center;
 }
 
 @keyframes spin {
