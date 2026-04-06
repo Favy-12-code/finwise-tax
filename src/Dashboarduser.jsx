@@ -27,17 +27,18 @@ export default function Dashboarduser() {
   const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-      try {
+  const fetchUser = async () => {
+    const token = localStorage.getItem("token"); // optional if backend uses cookie
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    try {
       const res = await fetch(`${API}/api/dashboard`, {
-        credentials: "include",
+        credentials: "include", // needed for HttpOnly cookie
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // optional if using cookie
           "Content-Type": "application/json",
         },
       });
@@ -47,8 +48,7 @@ export default function Dashboarduser() {
       if (data.success) {
         setUser(data.data);
 
-        const hasVisited = localStorage.getItem("hasVisitedDashboard");
-        if (!hasVisited) {
+        if (!localStorage.getItem("hasVisitedDashboard")) {
           setIsNewUser(true);
           localStorage.setItem("hasVisitedDashboard", "true");
         }
@@ -58,16 +58,16 @@ export default function Dashboarduser() {
       } else {
         handleLogout();
       }
-
     } catch (err) {
       console.error("Failed to fetch dashboard:", err);
+      handleLogout(); // optional
     } finally {
       setLoading(false);
     }
   };
 
-    fetchUser();
-  }, []);
+  fetchUser();
+}, [navigate]); // include navigate to avoid closure issues
 
   const saveActivity = (newData) => {
     setActivity(newData);
