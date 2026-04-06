@@ -13,11 +13,12 @@ export default function VerifyPage({ type, value, onBack }) {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(300);
   const [expired, setExpired] = useState(false);
+  const [isResendTimer, setIsResendTimer] = useState(false);
+  const [resendDisabled, setResendDisabled] = useState(true);
+
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [errorState, setErrorState] = useState(false);
-
-  
 
   const [resent, setResent] = useState(false);
   const [emptyOtpError, setEmptyOtpError] = useState(false);
@@ -33,6 +34,7 @@ export default function VerifyPage({ type, value, onBack }) {
   useEffect(() => {
     if (timeLeft <= 0) {
       setExpired(true);
+      setResendDisabled(false); 
       return;
     }
 
@@ -114,12 +116,14 @@ export default function VerifyPage({ type, value, onBack }) {
       );
 
       setTimeLeft(60);
+      setIsResendTimer(true);
       setExpired(false);
       setOtp(["", "", "", ""]);
       setResent(true);
       setOtpSubmitted(false);
       setEmptyOtpError(false);
-        setErrorState(false); 
+      setErrorState(false); 
+      setResendDisabled(true);
     } catch {}
 
     setResending(false);
@@ -150,6 +154,14 @@ export default function VerifyPage({ type, value, onBack }) {
   setOtp(newOtp);
 
   inputsRef.current[3].focus();
+};
+
+const formatTime = (seconds) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, "0")}:${secs
+    .toString()
+    .padStart(2, "0")}`;
 };
 
   return (
@@ -183,7 +195,7 @@ export default function VerifyPage({ type, value, onBack }) {
           </p>
         )}
 
-        {!expired && <p className="timer">00:{timeLeft}s</p>}
+        {!expired && <p className="timer">{formatTime(timeLeft)}</p>}
 
         {expired && (
           <p className="expired">
@@ -233,7 +245,7 @@ export default function VerifyPage({ type, value, onBack }) {
         {!expired && (
           <button className="verify-btn" onClick={handleVerify}>
             {loading ? (
-              <AiOutlineLoading3Quarters className="spinner" />
+              <AiOutlineLoading3Quarters className="spinnerLoad" />
             ) : type === "phone" ? (
               "Verify Phone"
             ) : (
@@ -243,7 +255,7 @@ export default function VerifyPage({ type, value, onBack }) {
         )}
 
 
-          <button className="resend-btn" onClick={handleResend}>
+          <button className="resend-btn" onClick={handleResend}  disabled={resendDisabled || resending}>
             {resending ? (
               <AiOutlineLoading3Quarters className="spinnerLoad" />
             ) : (

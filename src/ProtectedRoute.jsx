@@ -1,5 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import '../styles/dashboard.css'
 
 export default function ProtectedRoute({ children }) {
   const [status, setStatus] = useState("loading");
@@ -32,9 +34,8 @@ export default function ProtectedRoute({ children }) {
     checkAuth();
   }, []);
 
-  // ✅ show loader while checking
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <div className="loading"><AiOutlineLoading3Quarters className="spinnerLoad" /></div>;
   }
 
   if (status === "unauthorized") {

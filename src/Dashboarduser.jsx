@@ -29,6 +29,10 @@ export default function Dashboarduser() {
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
       try {
       const res = await fetch(`${API}/api/dashboard`, {
         credentials: "include",
@@ -51,10 +55,11 @@ export default function Dashboarduser() {
 
         const stored = localStorage.getItem("activity");
         if (stored) setActivity(JSON.parse(stored));
+      } else {
+        handleLogout();
       }
 
     } catch (err) {
-      // Do NOT navigate here
       console.error("Failed to fetch dashboard:", err);
     } finally {
       setLoading(false);
@@ -64,7 +69,6 @@ export default function Dashboarduser() {
     fetchUser();
   }, []);
 
-  // 🔥 SAVE ACTIVITY
   const saveActivity = (newData) => {
     setActivity(newData);
     localStorage.setItem("activity", JSON.stringify(newData));
@@ -89,18 +93,15 @@ export default function Dashboarduser() {
     saveActivity([]);
   };
 
-  // 🔥 LOGOUT
   const handleLogout = async () => {
     await fetch(`${API}/api/auth/logout`, { credentials: "include" });
     localStorage.removeItem("hasVisitedDashboard");
-    
 
-     localStorage.clear();
-
-  navigate("/");
+    localStorage.clear();
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
-  // 🔥 CALCULATIONS
   const calculateVAT = () => {
     if (!vatInput) return;
     const vat = Number(vatInput) * 0.075;
@@ -131,7 +132,6 @@ export default function Dashboarduser() {
     logActivity("PIT Calculated", tax);
   };
 
-  // 🧠 AI SUGGESTION
   const getSuggestion = () => {
     if (result.includes("VAT")) return "💡 Track expenses to reduce VAT.";
     if (result.includes("CIT")) return "💡 Reinvest profits to reduce tax.";
@@ -139,13 +139,11 @@ export default function Dashboarduser() {
     return "";
   };
 
-  // 📊 CHART
   const chartData = activity.slice(0, 5).map((a, i) => ({
     name: `T${i + 1}`,
     value: a.value || 0,
   }));
 
-  if (loading) return <div className="loader">Loading...</div>;
   if (!user) return null;
 
   return (
@@ -246,7 +244,6 @@ export default function Dashboarduser() {
                 <small>{a.time}</small>
               </div>
 
-              {/* ❌ DELETE BUTTON */}
               <button
                 className="delete-btn"
                 onClick={() => deleteActivity(i)}
