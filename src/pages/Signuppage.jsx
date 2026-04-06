@@ -166,8 +166,6 @@ const handlePhoneSignupSuccess = (phone) => {
 
 const [submitted, setSubmitted] = useState(false);
 
-
-
   return step === "signup" ? (
     <div className="signup-page">
       <div className="signup-left" ref={signupLeftRef}>

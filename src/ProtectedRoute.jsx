@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import './styles/dashboard.css'
+import "./styles/dashboard.css";
 
 export default function ProtectedRoute({ children }) {
   const [status, setStatus] = useState("loading");
